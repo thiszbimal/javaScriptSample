@@ -1,0 +1,114 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<title></title>
+
+	<link rel="stylesheet" type="text/css" href="assets/css/bootstrap.min.css">
+
+	<link rel="stylesheet" type="text/css" href="assets/css/bootstrap-theme.min.css">
+
+	<script src="model/student.model.js"></script>
+	<script src="service/student.service.js"></script>
+	<script src="service/libs/jquery.min.js"></script>
+
+	<script src="service/bootstrap.min.js"></script>
+
+</head>
+<body>
+<div class="container">
+<h1>Student Management System</h1>
+<a href="javascript:void(0)" class="btn btn-primary" role="button" id="add-students">Add Students</a>
+
+<a href="javascript:void(0)" class="btn btn-primary" role="button" id="show-students">Show Students</a>
+</br>
+</br>
+<div  class="form-group" id="student-dialogue" style="display:none">
+<form role="form">
+
+<div class="form-group">First Name:
+<input type="text" id="fname" name="first_name" placeholder="Enter First Name" onclick="this.setSelectionRange(0, this.value.length)"/>
+</div>
+<div class="form-group" >Last Name:
+<input type="text" id="lname" name="last_name" placeholder="Enter Last Name" onclick="this.setSelectionRange(0, this.value.length)" />
+</div>
+<div class="form-group">Email:
+<input type="email" id="email" name="email" placeholder="Enter Email" onclick="this.select()" />
+</div>
+
+
+</form>
+</div>
+<div class="form-group">
+<button type="submit" class="btn btn-success" id="save-student" style="display:none">Save</button>
+</div>
+<table id="student-table" class="table table-bordered table-hover table-striped" >
+	<tr>
+		<th><input type="checkbox" id="check-all"/></th>
+		<th>Id</th>
+		<th>Name</th>
+		<th>Email</th>
+		<th>Action</th>
+	</tr>
+
+</table>
+<div class="form-group" id="student-list"></div>
+<script>
+
+function getOBJ(key){
+	return document.getElementById(key);
+}
+var studentService=new StudentService();
+
+	var fname=getOBJ("fname");
+	var lname=getOBJ("lname");
+	var email=getOBJ("email");
+	var addBtn=getOBJ("add-students");
+	var saveButton=getOBJ("save-student");
+	var showButton=getOBJ("show-students");
+	var showStudentList=getOBJ("student-list");
+	var stdDiag=getOBJ("student-dialogue");
+
+	addBtn.onclick=function(){
+		stdDiag.style.display="block";
+		saveButton.style.display="block";
+		showStudentList.style.display="none";
+		
+	};
+
+	saveButton.onclick=function(){
+		var student=new Student();
+		student.firstName=fname.value;
+		student.lastName=lname.value;
+		student.email=email.value;
+		
+		studentService.add(student);
+
+		stdDiag.style.display="none";
+		saveButton.style.display="none";
+		
+		return false;
+	};
+
+	showButton.onclick=function(){
+		studentList=studentService.getAll();
+		var content="";
+		for (var i = 0; i < studentList.length; i++) {
+			var count = i+1;
+			var student=studentList[i];
+
+
+			content+="<h2>"+count +". " + student.firstName + " " + student.lastName +", " +student.email +"</h2>";
+		};
+		showStudentList.innerHTML=content;
+
+		stdDiag.style.display="none";
+		saveButton.style.display="none";
+		showStudentList.style.display="block";
+
+	};
+
+
+</script>
+</div>
+</body>
+</html>
